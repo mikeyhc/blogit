@@ -11,6 +11,7 @@
 
 start(_StartType, _StartArgs) ->
     Routes = [{'_', [{"/", latest_handler, []},
+                     {"/entry/:date", entry_handler, []},
                      {"/admin/add", add_handler, []},
                      {"/styles/[...]", cowboy_static,
                       {priv_dir, logit, "styles"}}

@@ -1,7 +1,7 @@
 -module(logit_db).
 
 -export([install/1, wait_for_tables/0]).
--export([add_entry/3, latest_entry/0, next_entry/1, prev_entry/1]).
+-export([add_entry/3, latest_entry/0, next_entry/1, prev_entry/1, entry/1]).
 
 -record(logit_entry, {date :: calendar:date(),
                       author :: binary(),
@@ -37,6 +37,15 @@ latest_entry() ->
     Entries = mnesia:activity(transaction, SelectAll),
     [First|_] = lists:reverse(lists:keysort(#logit_entry.date, Entries)),
     logit_entry_to_dict(First).
+
+entry(Date) ->
+    Select = fun() -> mnesia:read({logit_entry, Date}) end,
+    case mnesia:activity(transaction, Select) of
+        [E] -> {ok, logit_entry_to_dict(E)};
+        [_|_] -> {error, multiple_entries};
+        [] -> {error, no_entry}
+    end.
+
 
 logit_entry_to_dict(E) ->
     #{date => E#logit_entry.date,

@@ -31,26 +31,10 @@ read_body(Req0, Acc) ->
         {more, Data, Req} -> read_body(Req, << Acc/binary, Data/binary >>)
     end.
 
-process_date(Date) ->
-    Parts = binary:split(Date, <<"-">>, [global]),
-    try
-        case lists:map(fun(X) -> erlang:binary_to_integer(X, 10) end, Parts) of
-            [Y, M, D] ->
-                DateTuple = {Y, M ,D},
-                case calendar:valid_date(DateTuple) of
-                    true -> DateTuple;
-                    false -> false
-                end;
-            _ -> false
-        end
-    catch
-        error:badarg -> false
-    end.
-
 process_body(Body) ->
     case binary:split(Body, [<<"\n">>, <<"\r">>], [global]) of
         [Date, Author|Rest] ->
-            case process_date(Date) of
+            case logit_html:process_date(Date) of
                 {Y, M, D} ->
                     SpacedContent = lists:join(<<"\n">>, Rest),
                     {ok, {Y, M, D}, Author,
