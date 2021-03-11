@@ -1,2 +1,2 @@
-# blogit
-A git based blogging system
+# logit
+A git based daily log system

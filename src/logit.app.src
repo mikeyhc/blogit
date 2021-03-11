@@ -1,0 +1,17 @@
+{application, logit,
+ [{description, "A git based logging platform"},
+  {vsn, "0.1.0"},
+  {registered, []},
+  {mod, {logit_app, []}},
+  {applications,
+   [kernel,
+    stdlib,
+    cowboy,
+    mnesia
+   ]},
+  {env,[]},
+  {modules, []},
+
+  {licenses, ["The Unlicense"]},
+  {links, []}
+ ]}.
